@@ -1,84 +1,166 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DES-II Test</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-       (function(){
-          emailjs.init("Y60KpXp6th2GUr2NB"); // Public Key Kamu
-       })();
-    </script>
-    <style>
-        body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
-        .question { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        input[type="range"] { width: 100%; }
-        button { background: #4CAF50; color: white; padding: 15px; border: none; width: 100%; cursor: pointer; font-size: 16px; border-radius: 5px; }
-        #hasil { margin-top: 20px; padding: 15px; background: #e8f5e9; display: none; border-radius: 5px; }
-        .identitas { background: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #ddd; }
-        input[type="text"] { width: 95%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DES-II Screening Test</title>
+
+<!-- EMAILJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+(function(){
+    emailjs.init("Y60KpXp6th2GUr2NB"); // Public Key kamu
+})();
+</script>
+
+<style>
+body {
+    font-family: Arial;
+    padding: 20px;
+    max-width: 700px;
+    margin: auto;
+    background: #f5f5f5;
+}
+h2 { text-align: center; }
+
+.identitas {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.question {
+    margin-bottom: 12px;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+}
+
+input[type=range] { width: 100%; }
+
+button {
+    background: #4CAF50;
+    color: white;
+    padding: 15px;
+    border: none;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#hasil {
+    margin-top: 20px;
+    padding: 15px;
+    background: #e8f5e9;
+    display: none;
+    border-radius: 10px;
+}
+</style>
 </head>
+
 <body>
 
-    <h2>DES-II Screening Test</h2>
-    
-    <div class="identitas">
-        <label><b>Nama Peserta:</b></label><br>
-        <input type="text" id="nama_user" placeholder="Masukkan nama lengkap..." required>
-    </div>
+<h2>DES-II (Dissociative Experiences Scale)</h2>
 
-    <div id="quiz-container">
-        <p>Silakan geser persentase sesuai pengalaman Anda (0% - 100%)</p>
-        <div class="question">
-            <label>20. Merasa hidup tidak nyata</label>
-            <input type="range" class="skor" min="0" max="100" value="0" oninput="this.nextElementSibling.innerText = this.value + '%'">
-            <span>0%</span>
-        </div>
-        <div class="question">
-            <label>28. Merasa tidak sepenuhnya hadir</label>
-            <input type="range" class="skor" min="0" max="100" value="0" oninput="this.nextElementSibling.innerText = this.value + '%'">
-            <span>0%</span>
-        </div>
-    </div>
+<div class="identitas">
+<label><b>Nama Peserta:</b></label>
+<input type="text" id="nama_user" placeholder="Masukkan nama..." style="width:100%; padding:10px;">
+</div>
 
-    <button onclick="prosesHasil()">Hitung Skor & Kirim</button>
+<div id="pertanyaan"></div>
 
-    <div id="hasil"></div>
+<button onclick="hitung()">Hitung Skor & Kirim</button>
 
-    <script>
-        function prosesHasil() {
-            const nama = document.getElementById('nama_user').value;
-            if (!nama) {
-                alert("Mohon isi nama Anda terlebih dahulu!");
-                return;
-            }
+<div id="hasil"></div>
 
-            const sliders = document.querySelectorAll('.skor');
-            let total = 0;
-            sliders.forEach(s => total += parseInt(s.value));
-            
-            const rataRata = (total / sliders.length).toFixed(2);
-            
-            // Tampilkan hasil di layar
-            const hasilDiv = document.getElementById('hasil');
-            hasilDiv.style.display = 'block';
-            hasilDiv.innerHTML = `<h3>Skor Anda: ${rataRata}</h3><p>Data sedang dikirim ke database...</p>`;
+<script>
+// 30 ITEM
+const soal = [
+"Merasa seperti melihat diri dari luar tubuh",
+"Merasa dunia tidak nyata",
+"Tidak ingat bagaimana sampai di suatu tempat",
+"Menemukan barang tanpa ingat membeli",
+"Merasa seperti orang lain dalam diri",
+"Berbicara sendiri tanpa sadar",
+"Tidak ingat bagian penting hidup",
+"Merasa seperti mimpi saat sadar",
+"Tubuh terasa bukan milik sendiri",
+"Merasa hidup seperti film",
+"Menulis tanpa sadar",
+"Orang bilang kamu berubah",
+"Waktu berlalu tanpa sadar",
+"Melakukan sesuatu tanpa ingat",
+"Merasa punya identitas lain",
+"Tidak mengenali diri di cermin",
+"Melamun lama",
+"Dunia terasa kabur",
+"Merasa dikendalikan",
+"Merasa hidup tidak nyata",
+"Ada suara dalam diri",
+"Melakukan hal tanpa sadar",
+"Merasa seperti orang lain",
+"Tidak ingat kejadian penting",
+"Tubuh terpisah dari pikiran",
+"Kehilangan kendali",
+"Ada bagian diri lain",
+"Tidak sepenuhnya hadir",
+"Emosi berubah tiba-tiba tanpa sebab jelas",
+"Merasa memiliki versi diri berbeda dalam situasi tertentu"
+];
 
-            // KIRIM KE EMAILJS
-            const templateParams = {
-                nama_peserta: nama,
-                skor_akhir: rataRata
-            };
+const container = document.getElementById("pertanyaan");
 
-            emailjs.send('service123', 'template_kcv9mxs', templateParams)
-                .then(function() {
-                    hasilDiv.innerHTML += `<p style="color:green;"><b>Berhasil! Data sudah masuk ke email admin.</b></p>`;
-                }, function(error) {
-                    alert("Gagal mengirim data: " + JSON.stringify(error));
-                });
-        }
-    </script>
+// generate soal
+soal.forEach((s, i) => {
+    container.innerHTML += `
+    <div class="question">
+        <label>${i+1}. ${s}</label>
+        <input type="range" min="0" max="100" value="0" class="skor"
+        oninput="this.nextElementSibling.innerText=this.value+'%'">
+        <span>0%</span>
+    </div>`;
+});
+
+function hitung(){
+    const nama = document.getElementById("nama_user").value;
+    if(!nama){
+        alert("Isi nama dulu!");
+        return;
+    }
+
+    let total = 0;
+    document.querySelectorAll(".skor").forEach(s => total += parseInt(s.value));
+
+    let rata = (total / 30).toFixed(2);
+
+    let interpretasi = "";
+    if(rata < 20) interpretasi = "Normal";
+    else if(rata < 30) interpretasi = "Sedang";
+    else interpretasi = "Tinggi (indikasi disosiasi kuat)";
+
+    const hasil = document.getElementById("hasil");
+    hasil.style.display = "block";
+    hasil.innerHTML = `
+    <h3>Skor Anda: ${rata}%</h3>
+    <p>Interpretasi: ${interpretasi}</p>
+    <p><i>Ini hanya screening awal, bukan diagnosis medis.</i></p>
+    <p>Mengirim data...</p>
+    `;
+
+    // kirim ke email
+    emailjs.send('service123','template_kcv9mxs',{
+        nama_peserta: nama,
+        skor_akhir: rata,
+        interpretasi: interpretasi
+    }).then(()=>{
+        hasil.innerHTML += "<p style='color:green;'>Data berhasil dikirim ke email</p>";
+    }).catch(err=>{
+        alert("Error: "+JSON.stringify(err));
+    });
+}
+</script>
+
 </body>
 </html>
