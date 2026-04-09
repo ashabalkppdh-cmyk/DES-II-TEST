@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>DES-II Screening Test</title>
+<style>
+body { font-family: Arial; background: #f5f5f5; padding: 20px; }
+.container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+h1 { text-align: center; }
+.question { margin-bottom: 15px; }
+input[type=range] { width: 100%; }
+.result { margin-top: 20px; font-weight: bold; }
+button { padding: 10px; width: 100%; background: #4CAF50; color: white; border: none; border-radius: 5px; }
+</style>
+</head>
+
+<body>
+<div class="container">
+<h1>DES-II (Dissociative Experiences Scale)</h1>
+<p>Pilih seberapa sering kamu mengalami hal berikut (0% = tidak pernah, 100% = selalu)</p>
+
+<form id="desForm"></form>
+
+<button onclick="hitungSkor()">Hitung Skor</button>
+
+<div class="result" id="hasil"></div>
+</div>
+
+<script>
+const pertanyaan = [
+"Merasa seperti melihat diri sendiri dari luar tubuh",
+"Merasa dunia sekitar tidak nyata",
+"Tidak ingat bagaimana sampai di suatu tempat",
+"Menemukan barang yang tidak ingat pernah membeli",
+"Merasa seperti orang lain dalam diri",
+"Berbicara sendiri tanpa sadar",
+"Tidak ingat bagian penting dari hidup",
+"Merasa seperti mimpi saat sadar",
+"Merasa tubuh bukan milik sendiri",
+"Merasa hidup seperti film",
+"Menulis sesuatu tanpa sadar",
+"Orang lain bilang kamu berubah kepribadian",
+"Merasa waktu berlalu cepat tanpa sadar",
+"Melakukan sesuatu tanpa ingat prosesnya",
+"Merasa punya identitas berbeda",
+"Merasa tidak mengenali diri di cermin",
+"Melamun sampai lupa waktu",
+"Merasa dunia seperti kabur",
+"Merasa dikendalikan oleh sesuatu",
+"Merasa hidup tidak nyata",
+"Merasa ada suara dalam diri",
+"Melakukan hal tanpa sadar",
+"Merasa seperti orang lain",
+"Tidak ingat kejadian penting",
+"Merasa tubuh terpisah dari pikiran",
+"Merasa kehilangan kendali",
+"Merasa ada bagian diri lain",
+"Merasa tidak sepenuhnya hadir"
+];
+
+const form = document.getElementById("desForm");
+
+pertanyaan.forEach((q, i) => {
+  form.innerHTML += `
+    <div class="question">
+      <label>${i+1}. ${q}</label>
+      <input type="range" min="0" max="100" value="0" id="q${i}">
+      <span id="val${i}">0%</span>
+    </div>
+  `;
+});
+
+document.querySelectorAll("input[type=range]").forEach((slider, i) => {
+  slider.oninput = function() {
+    document.getElementById("val"+i).innerText = this.value + "%";
+  }
+});
+
+function hitungSkor() {
+  let total = 0;
+  for (let i = 0; i < pertanyaan.length; i++) {
+    total += parseInt(document.getElementById("q"+i).value);
+  }
+
+  let rata = total / pertanyaan.length;
+
+  let interpretasi = "";
+  if (rata < 20) interpretasi = "Rendah (normal)";
+  else if (rata < 30) interpretasi = "Sedang";
+  else interpretasi = "Tinggi (indikasi disosiasi kuat)";
+
+  document.getElementById("hasil").innerHTML =
+    `Skor rata-rata: ${rata.toFixed(2)}%<br>Interpretasi: ${interpretasi}`;
+}
+</script>
+
+</body>
+</html>
